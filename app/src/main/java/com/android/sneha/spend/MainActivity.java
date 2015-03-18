@@ -5,11 +5,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
@@ -21,11 +25,11 @@ public class MainActivity extends ActionBarActivity {
     ListView smsList;
     List<String> smsAddress;
     List<String> smsBody;
-    List<String> smsRecDate;
+    List<Integer> smsRecDate;
     String[] smsReceivedDate;
     String smsbdy,smsadd,smsRDate;
     String formattedDate;
-
+    String userName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +40,24 @@ public class MainActivity extends ActionBarActivity {
         smsBody = new ArrayList<String>();
         smsRecDate = new ArrayList<>();
         String[][] mKeywords = {{"state bank", "transaction", "ref no"}, {"thanks", "calling", "121"}};
+
+        ParseFacebookUtils.logIn(this, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException err) {
+                if (user == null) {
+                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                } else if (user.isNew()) {
+                    userName =  user.getUsername();
+                    Log.d("MyApp", "User signed up and logged in through Facebook!");
+                } else {
+                   userName =  user.getUsername();
+                    //Log.d("UserName",userName);
+                    Log.d("MyApp", "User logged in through Facebook!");
+                }
+            }
+        });
+
+
 
         Cursor cursor = getContentResolver().query(Uri.parse("content://sms/inbox"), null, null, null, null);
         //Cursor c = getContentResolver().query(Uri.parse("content://sms/inbox"),new String[]{"date"},null,null,null);
@@ -56,7 +78,8 @@ public class MainActivity extends ActionBarActivity {
 
                         smsAddress.add(cursor.getString(cursor.getColumnIndexOrThrow("address")));
                         smsBody.add(cursor.getString((cursor.getColumnIndexOrThrow("body"))));
-                        smsRecDate.add(cursor.getString((cursor.getColumnIndexOrThrow("body"))));
+                       // smsRecDate.add(cursor.getString((cursor.getColumnIndexOrThrow("body"))));
+                       smsRecDate.add(cursor.getColumnIndex("date"));
                     }
 
                 } while (cursor.moveToNext());

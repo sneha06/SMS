@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.sneha.spend" >
 
-    <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".Spend"
         android:allowBackup="true"
@@ -14,16 +15,33 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.facebook.LoginActivity"
+            android:label="title_facebook_login" >
+        </activity>
+
         <activity
             android:name=".ScreenSlideActivity"
             android:label="@string/title_activity_screen_slide" >
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" >
+
+        </activity>
+
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/application_id"/>
+
     </application>
 
 </manifest>
